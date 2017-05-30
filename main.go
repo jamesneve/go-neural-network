@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jamesneve/neuralnetwork2/network"
 	"github.com/jamesneve/neuralnetwork2/mnist"
-	"github.com/jamesneve/neuralnetwork2/learn"
 	"math/rand"
 	"time"
 )
