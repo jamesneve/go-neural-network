@@ -8,14 +8,14 @@ import (
 )
 
 type Network struct {
-	Entries []*Entry
+	Entries []*InputNeuron
 	Layers []*Layer
 	Out []float64
 }
 
 func NewNetwork(in int, layers []int) *Network {
 	n := &Network{
-		Entries: make([]*Entry, 0, in),
+		Entries: make([]*InputNeuron, 0, in),
 		Layers: make([]*Layer, 0, len(layers)),
 	}
 	n.init(in, layers)
@@ -26,7 +26,7 @@ func (n *Network) init(in int, layers []int) {
 	n.initLayers(layers)
 	n.initEntries(in)
 	n.ConnectLayers()
-	n.ConnectEntries()
+	n.ConnectInputNeurons()
 }
 
 func (n *Network) initLayers(layers []int) {
@@ -38,7 +38,7 @@ func (n *Network) initLayers(layers []int) {
 
 func (n *Network) initEntries(in int) {
 	for ; in > 0; in-- {
-		e := NewEntry()
+		e := NewInputNeuron()
 		n.Entries = append(n.Entries, e)
 	}
 }
@@ -49,13 +49,13 @@ func (n *Network) ConnectLayers() {
 	}
 }
 
-func (n *Network) ConnectEntries() {
+func (n *Network) ConnectInputNeurons() {
 	for _, e := range n.Entries {
 		e.ConnectTo(*n.Layers[0])
 	}
 }
 
-func (n *Network) setEntries(v *[]float64) {
+func (n *Network) setInputNeurons(v *[]float64) {
 	values := *v
 	if len(values) != len(n.Entries) {
 		panic("Values and inputs don't match")
@@ -66,9 +66,9 @@ func (n *Network) setEntries(v *[]float64) {
 	}
 }
 
-func (n *Network) sendEntries() {
+func (n *Network) triggerInputNeurons() {
 	for _, e := range n.Entries {
-		e.Signal()
+		e.Trigger()
 	}
 }
 
@@ -90,8 +90,8 @@ func (n *Network) generateOut() []float64 {
 }
 
 func (n *Network) CalculateOutput(entries []float64) []float64 {
-	n.setEntries(&entries)
-	n.sendEntries()
+	n.setInputNeurons(&entries)
+	n.triggerInputNeurons()
 	n.calculateLayers()
 	out := n.generateOut()
 

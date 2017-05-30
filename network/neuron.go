@@ -4,18 +4,18 @@ import (
 	"math"
 )
 
-type Neuron struct {
+type SigmoidNeuron struct {
 	InSynapses []*Synapse
 	OutSynapses []*Synapse
 	Bias float64
 	Out float64
 }
 
-func (n *Neuron) SynapseTo(nTo *Neuron, weight float64) {
+func (n *SigmoidNeuron) CreateSynapseTo(nTo *SigmoidNeuron, weight float64) {
 	NewSynapseFromTo(n, nTo, weight)
 }
 
-func (n *Neuron) CalculateWeightedInput() float64 {
+func (n *SigmoidNeuron) CalculateWeightedInput() float64 {
 	var sum float64
 
 	for _, s := range n.InSynapses {
@@ -27,7 +27,7 @@ func (n *Neuron) CalculateWeightedInput() float64 {
 	return sum
 }
 
-func (n *Neuron) CalculateOutput() float64 {
+func (n *SigmoidNeuron) CalculateOutput() float64 {
 	z := n.CalculateWeightedInput()
 
 	out := Sigmoid(z)
@@ -35,11 +35,11 @@ func (n *Neuron) CalculateOutput() float64 {
 	return out
 }
 
-func (n *Neuron) CalculateAndSignalOutput() {
+func (n *SigmoidNeuron) CalculateAndSendOutput() {
 	n.Out = n.CalculateOutput()
 
 	for _, s := range n.OutSynapses {
-		s.Signal(n.Out)
+		s.Trigger(n.Out)
 	}
 }
 

@@ -1,7 +1,7 @@
 package network
 
 type Layer struct {
-	Neurons []*Neuron
+	Neurons []*SigmoidNeuron
 }
 
 func NewLayer(neurons int) *Layer {
@@ -11,10 +11,10 @@ func NewLayer(neurons int) *Layer {
 }
 
 func (l *Layer) init(neurons int) {
-	n := make([]*Neuron, 0, neurons)
+	n := make([]*SigmoidNeuron, 0, neurons)
 
 	for i := 0; i < neurons; i++ {
-		n = append(n, new(Neuron))
+		n = append(n, new(SigmoidNeuron))
 	}
 
 	l.Neurons = n
@@ -23,13 +23,13 @@ func (l *Layer) init(neurons int) {
 func (l *Layer) ConnectTo(layer *Layer) {
 	for _, n := range l.Neurons {
 		for _, toN := range layer.Neurons {
-			n.SynapseTo(toN, 0)
+			n.CreateSynapseTo(toN, 0)
 		}
 	}
 }
 
 func (l *Layer) CalculateNewOutputs() {
 	for i := range l.Neurons {
-		l.Neurons[i].CalculateAndSignalOutput()
+		l.Neurons[i].CalculateAndSendOutput()
 	}
 }

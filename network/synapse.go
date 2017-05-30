@@ -10,7 +10,7 @@ func NewSynapse(weight float64) *Synapse {
 	return &Synapse{Weight: weight}
 }
 
-func NewSynapseFromTo(from, to *Neuron, weight float64) *Synapse {
+func NewSynapseFromTo(from, to *SigmoidNeuron, weight float64) *Synapse {
 	syn := NewSynapse(weight)
 
 	from.OutSynapses = append(from.OutSynapses, syn)
@@ -19,7 +19,7 @@ func NewSynapseFromTo(from, to *Neuron, weight float64) *Synapse {
 	return syn
 }
 
-func (s *Synapse) Signal(value float64) {
+func (s *Synapse) Trigger(value float64) {
 	s.In = value
 	s.Out = s.In * s.Weight
 }
