@@ -195,6 +195,8 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 			for k := range n2.InSynapses {
 				if i != 0 {
 					nablaW[i][j][k] = delta[j] * n.Layers[i - 1].Neurons[k].CalculateOutput()
+				} else {
+					nablaW[i][j][k] = delta[j] * n.Entries[k].Input
 				}
 			}
 		}
