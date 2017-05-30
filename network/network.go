@@ -177,11 +177,6 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 
 	delta := n.CalculateFinalDelta(ideal)
 
-	//fmt.Println("In: ", in)
-	//fmt.Println("Out:", n.Out)
-	//fmt.Println("Ideal:", ideal)
-	//fmt.Println("Delta:", delta)
-
 	nablaB[last] = delta
 	for i, n2 := range l.Neurons {
 		for j := range n2.InSynapses {
@@ -205,9 +200,6 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 			}
 		}
 	}
-	//fmt.Println("NablaB:", nablaB)
-	//fmt.Println("NablaW:", nablaW)
-	//time.Sleep(10 * time.Second)
 
 	return nablaB, nablaW
 }
@@ -216,8 +208,6 @@ func (n *Network) CalculateIntermediateDelta(layerNumber int, previousDelta []fl
 	newDelta := make([]float64, len(n.Layers[layerNumber].Neurons))
 	for i, neuron := range n.Layers[layerNumber].Neurons {
 		sp := SigmoidPrime(neuron.CalculateWeightedInput())
-		//fmt.Println("Sigmoid Prime", sp)
-		//fmt.Println("Weighted Input", neuron.CalculateWeightedInput())
 		var sum float64
 		for i, s := range neuron.OutSynapses {
 			sum += previousDelta[i] * s.Weight
