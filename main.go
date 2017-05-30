@@ -13,7 +13,7 @@ func main() {
 	fmt.Println("Neural Network 2")
 
 	n := network.NewNetwork(784, []int{30, 10})
-	n.RandomizeSynapses()
+	n.RandomizeWeightsAndBiases()
 
 	mnistData := mnist.NewMnistData()
 	trainingData := mnistData.MakeTrainingData()

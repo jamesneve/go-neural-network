@@ -24,7 +24,7 @@ func NewNetwork(in int, layers []int) *Network {
 
 func (n *Network) init(in int, layers []int) {
 	n.initLayers(layers)
-	n.initEntries(in)
+	n.initInputNeurons(in)
 	n.ConnectLayers()
 	n.ConnectInputNeurons()
 }
@@ -36,7 +36,7 @@ func (n *Network) initLayers(layers []int) {
 	}
 }
 
-func (n *Network) initEntries(in int) {
+func (n *Network) initInputNeurons(in int) {
 	for ; in > 0; in-- {
 		e := NewInputNeuron()
 		n.Entries = append(n.Entries, e)
@@ -93,12 +93,10 @@ func (n *Network) CalculateOutput(entries []float64) []float64 {
 	n.setInputNeurons(&entries)
 	n.triggerInputNeurons()
 	n.calculateLayers()
-	out := n.generateOut()
-
-	return out
+	return n.generateOut()
 }
 
-func (n *Network) RandomizeSynapses() {
+func (n *Network) RandomizeWeightsAndBiases() {
 	rand.Seed(time.Now().UnixNano())
 
 	for _, l := range n.Layers {
