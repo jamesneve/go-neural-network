@@ -29,12 +29,3 @@ func main() {
 	correctResults := n.Evaluate(testData)
 	fmt.Println("Correct: ", correctResults, " / ", len(testData))
 }
-
-func ShuffleTrainingData(trainingData []learn.TrainingData) []learn.TrainingData {
-	res := make([]learn.TrainingData, len(trainingData))
-	perm := rand.Perm(len(trainingData))
-	for i := range trainingData {
-		res[i] = trainingData[perm[i]]
-	}
-	return res
-}
