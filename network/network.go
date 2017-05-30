@@ -187,7 +187,6 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 	//// !! Backpropagation step
 	for i := last - 1; i >= 0; i-- {
 		delta = n.CalculateIntermediateDelta(i, delta)
-		//fmt.Println("Intermediate delta:", delta)
 
 		nablaB[i] = delta
 

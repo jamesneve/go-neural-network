@@ -70,8 +70,8 @@
       <file leaf-file-name="network.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/network/network.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3135">
-              <caret line="209" column="67" lean-forward="false" selection-start-line="209" selection-start-column="67" selection-end-line="209" selection-end-column="67" />
+            <state relative-caret-position="790">
+              <caret line="188" column="62" lean-forward="false" selection-start-line="188" selection-start-column="62" selection-end-line="188" selection-end-column="62" />
               <folding>
                 <element signature="e#17#100#0" expanded="true" />
               </folding>
@@ -792,8 +792,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/network/network.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3135">
-          <caret line="209" column="67" lean-forward="false" selection-start-line="209" selection-start-column="67" selection-end-line="209" selection-end-column="67" />
+        <state relative-caret-position="790">
+          <caret line="188" column="62" lean-forward="false" selection-start-line="188" selection-start-column="62" selection-end-line="188" selection-end-column="62" />
           <folding>
             <element signature="e#17#100#0" expanded="true" />
           </folding>
