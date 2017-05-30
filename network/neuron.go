@@ -1,6 +1,8 @@
 package network
 
-import "math"
+import (
+	"math"
+)
 
 type Neuron struct {
 	InSynapses []*Synapse
@@ -42,7 +44,7 @@ func (n *Neuron) CalculateAndSignalOutput() {
 }
 
 func Sigmoid(x float64) float64 {
-	return 1 / (1 + math.Exp(-x))
+	return 1.0 / (1.0 + math.Exp(-x))
 }
 
 func SigmoidPrime(z float64) float64 {

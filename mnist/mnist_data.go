@@ -40,7 +40,7 @@ func (m *MnistData) marshallData(dataset *GoMNIST.Set) []learn.TrainingData {
 		for x := 0; x < bounds.Max.X; x++ {
 			for y := 0; y < bounds.Max.Y; y++ {
 				r, _, _, _ := image.At(x, y).RGBA()
-				vectorizedImage = append(vectorizedImage, float64(r))
+				vectorizedImage = append(vectorizedImage, float64(r)/100000)
 			}
 		}
 		t := learn.TrainingData{

@@ -127,7 +127,6 @@ func (n *Network) TrainByGradientDescent(trainingData []learn.TrainingData, epoc
 
 func (n *Network) UpdateMiniBatch(miniBatch []learn.TrainingData, eta float64) {
 	nablaB, nablaW := n.initializeZeroBiasedWeights()
-	learningRate := eta / float64(len(miniBatch))
 
 	for _, trainingDatum := range miniBatch {
 		deltaNablaB, deltaNablaW := n.Backpropagation(trainingDatum.TrainingInput, trainingDatum.DesiredOutputs, eta)
@@ -140,17 +139,15 @@ func (n *Network) UpdateMiniBatch(miniBatch []learn.TrainingData, eta float64) {
 			}
 		}
 	}
-	fmt.Println(nablaB, nablaW)
 
 	for i := range n.Layers {
 		for j := range n.Layers[i].Neurons {
-			n.Layers[i].Neurons[j].Bias = (n.Layers[i].Neurons[j].Bias - learningRate) * nablaB[i][j]
+			n.Layers[i].Neurons[j].Bias = n.Layers[i].Neurons[j].Bias - ((eta / float64(len(miniBatch))) * nablaB[i][j])
 			for k := range n.Layers[i].Neurons[j].InSynapses {
-				n.Layers[i].Neurons[j].InSynapses[k].Weight = (n.Layers[i].Neurons[j].InSynapses[k].Weight - learningRate) * nablaW[i][j][k]
+				n.Layers[i].Neurons[j].InSynapses[k].Weight = n.Layers[i].Neurons[j].InSynapses[k].Weight - ((eta / float64(len(miniBatch))) * nablaW[i][j][k])
 			}
 		}
 	}
-
 }
 
 func (n *Network) initializeZeroBiasedWeights() ([][]float64, [][][]float64) {
@@ -179,6 +176,12 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 	l := n.Layers[last]
 
 	delta := n.CalculateFinalDelta(ideal)
+
+	//fmt.Println("In: ", in)
+	//fmt.Println("Out:", n.Out)
+	//fmt.Println("Ideal:", ideal)
+	//fmt.Println("Delta:", delta)
+
 	nablaB[last] = delta
 	for i, n2 := range l.Neurons {
 		for j := range n2.InSynapses {
@@ -189,20 +192,22 @@ func (n *Network) Backpropagation(in, ideal []float64, speed float64) ([][]float
 	//// !! Backpropagation step
 	for i := last - 1; i >= 0; i-- {
 		delta = n.CalculateIntermediateDelta(i, delta)
+		//fmt.Println("Intermediate delta:", delta)
 
 		nablaB[i] = delta
 
 		l := n.Layers[i]
 		for j, n2 := range l.Neurons {
 			for k := range n2.InSynapses {
-				if i == 0 {
-					nablaW[i][j][k] = delta[j] * n.Entries[k].Input
-				} else {
+				if i != 0 {
 					nablaW[i][j][k] = delta[j] * n.Layers[i - 1].Neurons[k].CalculateOutput()
 				}
 			}
 		}
 	}
+	//fmt.Println("NablaB:", nablaB)
+	//fmt.Println("NablaW:", nablaW)
+	//time.Sleep(10 * time.Second)
 
 	return nablaB, nablaW
 }
@@ -211,6 +216,8 @@ func (n *Network) CalculateIntermediateDelta(layerNumber int, previousDelta []fl
 	newDelta := make([]float64, len(n.Layers[layerNumber].Neurons))
 	for i, neuron := range n.Layers[layerNumber].Neurons {
 		sp := SigmoidPrime(neuron.CalculateWeightedInput())
+		//fmt.Println("Sigmoid Prime", sp)
+		//fmt.Println("Weighted Input", neuron.CalculateWeightedInput())
 		var sum float64
 		for i, s := range neuron.OutSynapses {
 			sum += previousDelta[i] * s.Weight
@@ -225,7 +232,7 @@ func (n *Network) CalculateFinalDelta(idealOutputs []float64) []float64 {
 	last := len(n.Layers) - 1
 	r := make([]float64, len(n.Layers[last].Neurons))
 	for i, neuron := range n.Layers[last].Neurons {
-		r[i] = (n.Out - idealOutputs[i]) * SigmoidPrime(neuron.CalculateWeightedInput())
+		r[i] = (n.Out[i] - idealOutputs[i]) * SigmoidPrime(neuron.CalculateWeightedInput())
 	}
 	return r
 }
