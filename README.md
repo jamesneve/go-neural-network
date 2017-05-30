@@ -6,9 +6,9 @@ Depending a bit on the initial randomised weights and biases, the network gets 9
 
 This was mostly just intended as an experiment for myself to help me understand the structure of neural networks and
 the backpropagation algorithm. It takes a lot from existing implementations, and I don't claim any particular credit. 
-I only publish because I couldn't find any other direct implementations in Go of the methods in Michael Nielsen's 
-excellent book, and I find his Python arrays aren't always intuitive for someone not familiar with the language, so
-maybe it'll help someone.
+In particular, I made it while reading Michael Nielsen's book, so the algorithms owe everything to the implementations there.
+I find his Python arrays aren't always intuitive for someone not familiar with the language. I think Go's loop-based code
+makes it a little easier to understand what's going on, even if the code becomes somewhat verbose.
 
 # Credit
 
