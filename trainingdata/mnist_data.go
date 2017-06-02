@@ -10,7 +10,7 @@ type MnistData struct {
 }
 
 func NewMnistData() MnistData {
-	train, test, err := GoMNIST.Load("./data")
+	train, test, err := GoMNIST.Load("./MNISTdataset")
 	if err != nil {
 		panic(err)
 	}

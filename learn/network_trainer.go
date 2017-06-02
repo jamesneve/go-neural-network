@@ -8,21 +8,29 @@ import (
 
 type NetworkTrainer struct {
 	net *network.Network
+	costFunction CostFunction
+	eta float64
+	lambda float64
+	trainingData []trainingdata.TrainingData
 }
 
-func NewNetworkTrainer(nw *network.Network) NetworkTrainer {
+func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, eta, lambda float64) NetworkTrainer {
 	return NetworkTrainer{
 		net: nw,
+		costFunction: costFunction,
+		eta: eta,
+		lambda: lambda,
+		trainingData: trainingData,
 	}
 }
 
-func (t *NetworkTrainer) TrainByGradientDescent(trainingData []trainingdata.TrainingData, epochs, miniBatchSize int, eta float64, testData []trainingdata.TrainingData) {
+func (t *NetworkTrainer) TrainByGradientDescent(epochs, miniBatchSize int, testData []trainingdata.TrainingData) {
 	for i := 0; i < epochs; i++ {
-		currentTrainingData := trainingdata.ShuffleTrainingData(trainingData)
-		batchCount := len(trainingData) / miniBatchSize
+		currentTrainingData := trainingdata.ShuffleTrainingData(t.trainingData)
+		batchCount := len(t.trainingData) / miniBatchSize
 		for j := 0; j < batchCount; j++ {
 			batch := currentTrainingData[j * miniBatchSize : (j + 1) * miniBatchSize]
-			t.UpdateMiniBatch(batch, eta)
+			t.UpdateMiniBatch(batch)
 		}
 
 		correct := t.Evaluate(testData)
@@ -30,11 +38,11 @@ func (t *NetworkTrainer) TrainByGradientDescent(trainingData []trainingdata.Trai
 	}
 }
 
-func (t *NetworkTrainer) UpdateMiniBatch(miniBatch []trainingdata.TrainingData, eta float64) {
+func (t *NetworkTrainer) UpdateMiniBatch(miniBatch []trainingdata.TrainingData) {
 	nablaB, nablaW := t.initializeZeroBiasedWeights()
 
 	for _, trainingDatum := range miniBatch {
-		deltaNablaB, deltaNablaW := t.Backpropagation(trainingDatum.TrainingInput, trainingDatum.DesiredOutputs, eta)
+		deltaNablaB, deltaNablaW := t.Backpropagation(trainingDatum.TrainingInput, trainingDatum.DesiredOutputs)
 		for i := range nablaW {
 			for j := range nablaW[i] {
 				nablaB[i][j] += deltaNablaB[i][j]
@@ -47,9 +55,9 @@ func (t *NetworkTrainer) UpdateMiniBatch(miniBatch []trainingdata.TrainingData, 
 
 	for i := range t.net.Layers {
 		for j := range t.net.Layers[i].Neurons {
-			t.net.Layers[i].Neurons[j].Bias = t.net.Layers[i].Neurons[j].Bias - ((eta / float64(len(miniBatch))) * nablaB[i][j])
+			t.net.Layers[i].Neurons[j].Bias = t.net.Layers[i].Neurons[j].Bias - ((t.eta / float64(len(miniBatch))) * nablaB[i][j])
 			for k := range t.net.Layers[i].Neurons[j].InSynapses {
-				t.net.Layers[i].Neurons[j].InSynapses[k].Weight = t.net.Layers[i].Neurons[j].InSynapses[k].Weight - ((eta / float64(len(miniBatch))) * nablaW[i][j][k])
+				t.net.Layers[i].Neurons[j].InSynapses[k].Weight = (1 - t.eta * (t.lambda / float64(len(t.trainingData)))) * t.net.Layers[i].Neurons[j].InSynapses[k].Weight - ((t.eta / float64(len(miniBatch))) * nablaW[i][j][k])
 			}
 		}
 	}
@@ -69,7 +77,7 @@ func (t *NetworkTrainer) initializeZeroBiasedWeights() ([][]float64, [][][]float
 	return b, w
 }
 
-func (t *NetworkTrainer) Backpropagation(in, ideal []float64, speed float64) ([][]float64, [][][]float64) {
+func (t *NetworkTrainer) Backpropagation(in, ideal []float64) ([][]float64, [][][]float64) {
 	// First, calculate the final output of the network for the training inputs
 	t.net.CalculateOutput(in)
 
@@ -80,7 +88,7 @@ func (t *NetworkTrainer) Backpropagation(in, ideal []float64, speed float64) ([]
 	last := len(t.net.Layers) - 1
 	l := t.net.Layers[last]
 
-	delta := t.CalculateFinalDelta(ideal)
+	delta := t.costFunction.CalculateDelta(l, t.net.Out, ideal)
 
 	nablaB[last] = delta
 	for i, n2 := range l.Neurons {
@@ -122,15 +130,6 @@ func (t *NetworkTrainer) CalculateIntermediateDelta(layerNumber int, previousDel
 	}
 
 	return newDelta
-}
-
-func (t *NetworkTrainer) CalculateFinalDelta(idealOutputs []float64) []float64 {
-	last := len(t.net.Layers) - 1
-	r := make([]float64, len(t.net.Layers[last].Neurons))
-	for i, neuron := range t.net.Layers[last].Neurons {
-		r[i] = (t.net.Out[i] - idealOutputs[i]) * neuron.CalculateOutputDelta()
-	}
-	return r
 }
 
 func (t *NetworkTrainer) Evaluate(testData []trainingdata.TrainingData) int {

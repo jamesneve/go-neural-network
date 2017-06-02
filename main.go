@@ -18,8 +18,8 @@ func main() {
 	trainingData := mnistData.MakeTrainingData()
 	testData := mnistData.MakeTestData()
 
-	nt := learn.NewNetworkTrainer(n)
+	nt := learn.NewNetworkTrainer(n, trainingData, learn.QuadraticCost, 3.0, 1.0)
 
 	fmt.Println("Training MNIST Dataset")
-	nt.TrainByGradientDescent(trainingData, 10, 10, 3.0, testData)
+	nt.TrainByGradientDescent(10, 10, testData)
 }
