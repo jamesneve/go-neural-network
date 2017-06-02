@@ -1,8 +1,7 @@
-package mnist
+package trainingdata
 
 import (
 	"github.com/petar/GoMNIST"
-	"github.com/jamesneve/neuralnetwork2/learn"
 )
 
 type MnistData struct {
@@ -22,16 +21,16 @@ func NewMnistData() MnistData {
 	}
 }
 
-func (m *MnistData) MakeTrainingData() []learn.TrainingData {
+func (m *MnistData) MakeTrainingData() []TrainingData {
 	return m.marshallData(m.trainingData)
 }
 
-func (m *MnistData) MakeTestData() []learn.TrainingData {
+func (m *MnistData) MakeTestData() []TrainingData {
 	return m.marshallData(m.testData)
 }
 
-func (m *MnistData) marshallData(dataset *GoMNIST.Set) []learn.TrainingData {
-	result := make([]learn.TrainingData, 0, dataset.Count())
+func (m *MnistData) marshallData(dataset *GoMNIST.Set) []TrainingData {
+	result := make([]TrainingData, 0, dataset.Count())
 	for i := 0; i < dataset.Count(); i++ {
 		image, label := dataset.Get(i)
 
@@ -43,7 +42,7 @@ func (m *MnistData) marshallData(dataset *GoMNIST.Set) []learn.TrainingData {
 				vectorizedImage = append(vectorizedImage, float64(r)/100000)
 			}
 		}
-		t := learn.TrainingData{
+		t := TrainingData{
 			TrainingInput: vectorizedImage,
 			DesiredOutputs: m.vectorizeOutput(uint8(label)),
 		}

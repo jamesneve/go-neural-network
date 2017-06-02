@@ -2,29 +2,24 @@ package main
 
 import (
 	"fmt"
-	"github.com/jamesneve/neuralnetwork2/network"
-	"github.com/jamesneve/neuralnetwork2/mnist"
-	"math/rand"
-	"time"
+	"github.com/jamesneve/go-neural-network/network"
+	"github.com/jamesneve/go-neural-network/trainingdata"
+	"github.com/jamesneve/go-neural-network/learn"
 )
 
 func main() {
-	fmt.Println("Neural Network 2")
+	fmt.Println("Go Neural Network")
+	fmt.Println("Default: SGD / L2 Regression / Cross-Entropy")
 
 	n := network.NewNetwork(784, []int{30, 10})
 	n.RandomizeWeightsAndBiases()
 
-	mnistData := mnist.NewMnistData()
+	mnistData := trainingdata.NewMnistData()
 	trainingData := mnistData.MakeTrainingData()
 	testData := mnistData.MakeTestData()
 
-	rand.Seed(time.Now().UnixNano())
+	nt := learn.NewNetworkTrainer(n)
 
 	fmt.Println("Training MNIST Dataset")
-	n.TrainByGradientDescent(trainingData, 10, 10, 3.0, testData)
-
-	fmt.Println("Running test data")
-
-	correctResults := n.Evaluate(testData)
-	fmt.Println("Correct: ", correctResults, " / ", len(testData))
+	nt.TrainByGradientDescent(trainingData, 10, 10, 3.0, testData)
 }

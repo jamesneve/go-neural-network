@@ -1,4 +1,4 @@
-package learn
+package trainingdata
 
 import (
 	"math/rand"

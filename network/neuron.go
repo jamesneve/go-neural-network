@@ -27,12 +27,16 @@ func (n *SigmoidNeuron) CalculateWeightedInput() float64 {
 	return sum
 }
 
+func (n *SigmoidNeuron) CalculateOutputDelta() float64 {
+	z := n.CalculateWeightedInput()
+
+	return n.sigmoidPrime(z)
+}
+
 func (n *SigmoidNeuron) CalculateOutput() float64 {
 	z := n.CalculateWeightedInput()
 
-	out := Sigmoid(z)
-
-	return out
+	return n.sigmoid(z)
 }
 
 func (n *SigmoidNeuron) CalculateAndSendOutput() {
@@ -43,10 +47,10 @@ func (n *SigmoidNeuron) CalculateAndSendOutput() {
 	}
 }
 
-func Sigmoid(x float64) float64 {
-	return 1.0 / (1.0 + math.Exp(-x))
+func (n *SigmoidNeuron) sigmoidPrime(z float64) float64 {
+	return n.sigmoid(z) * (1 - n.sigmoid(z))
 }
 
-func SigmoidPrime(z float64) float64 {
-	return Sigmoid(z) * (1 - Sigmoid(z))
+func (n *SigmoidNeuron) sigmoid(z float64) float64 {
+	return 1.0 / (1.0 + math.Exp(-z))
 }
