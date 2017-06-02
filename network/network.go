@@ -26,6 +26,7 @@ func (n *Network) init(in int, layers []int) {
 	n.initInputNeurons(in)
 	n.ConnectLayers()
 	n.ConnectInputNeurons()
+	n.RandomizeWeightsAndBiases()
 }
 
 func (n *Network) initLayers(layers []int) {
