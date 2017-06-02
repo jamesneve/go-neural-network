@@ -9,15 +9,17 @@ import (
 type NetworkTrainer struct {
 	net *network.Network
 	costFunction CostFunction
+	regularizationFunction RegularizationFunction
 	eta float64
 	lambda float64
 	trainingData []trainingdata.TrainingData
 }
 
-func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, eta, lambda float64) NetworkTrainer {
+func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, regularizationFunction RegularizationFunction, eta, lambda float64) NetworkTrainer {
 	return NetworkTrainer{
 		net: nw,
 		costFunction: costFunction,
+		regularizationFunction: regularizationFunction,
 		eta: eta,
 		lambda: lambda,
 		trainingData: trainingData,
@@ -57,7 +59,8 @@ func (t *NetworkTrainer) UpdateMiniBatch(miniBatch []trainingdata.TrainingData) 
 		for j := range t.net.Layers[i].Neurons {
 			t.net.Layers[i].Neurons[j].Bias = t.net.Layers[i].Neurons[j].Bias - ((t.eta / float64(len(miniBatch))) * nablaB[i][j])
 			for k := range t.net.Layers[i].Neurons[j].InSynapses {
-				t.net.Layers[i].Neurons[j].InSynapses[k].Weight = (1 - t.eta * (t.lambda / float64(len(t.trainingData)))) * t.net.Layers[i].Neurons[j].InSynapses[k].Weight - ((t.eta / float64(len(miniBatch))) * nablaW[i][j][k])
+				newWeight := t.regularizationFunction.CalculateNewWeight(t.eta, t.lambda, t.net.Layers[i].Neurons[j].InSynapses[k].Weight, nablaW[i][j][k], float64(len(miniBatch)), float64(len(t.trainingData)))
+				t.net.Layers[i].Neurons[j].InSynapses[k].Weight = newWeight
 			}
 		}
 	}

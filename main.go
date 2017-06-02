@@ -18,7 +18,7 @@ func main() {
 	trainingData := mnistData.MakeTrainingData()
 	testData := mnistData.MakeTestData()
 
-	nt := learn.NewNetworkTrainer(n, trainingData, learn.QuadraticCost, 3.0, 1.0)
+	nt := learn.NewNetworkTrainer(n, trainingData, learn.CrossEntropy, learn.L2Regularization, 0.1, 5.0)
 
 	fmt.Println("Training MNIST Dataset")
 	nt.TrainByGradientDescent(10, 10, testData)
