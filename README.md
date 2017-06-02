@@ -31,7 +31,19 @@ nt := learn.NewNetworkTrainer(n, trainingData, learn.CrossEntropy, learn.L2Regul
 nt.TrainByGradientDescent(30, 10, testData)
 ```
 
+A few choices of regularization
+```go
+learn.NoRegularization
+learn.L1Regularization
+learn.L2Regularization
+```
+
+And of cost function
+```go
+learn.QuadraticCost
+learn.CrossEntropy
+```
+
 # Credit
 
-* The structure of the network and division into structs was heavily inspired by NOX73's go-neural: https://github.com/NOX73/go-neural
-* Training methods are Go versions of the Python code in Michael Nielsen's book: http://neuralnetworksanddeeplearning.com/index.html
+* Michael Nielsen's excellent book: http://neuralnetworksanddeeplearning.com/index.html
