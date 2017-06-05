@@ -6,7 +6,7 @@ import (
 
 type MnistData struct {
 	trainingData *GoMNIST.Set
-	testData *GoMNIST.Set
+	testData     *GoMNIST.Set
 }
 
 func NewMnistData() MnistData {
@@ -17,7 +17,7 @@ func NewMnistData() MnistData {
 
 	return MnistData{
 		trainingData: train,
-		testData: test,
+		testData:     test,
 	}
 }
 
@@ -43,7 +43,7 @@ func (m *MnistData) marshallData(dataset *GoMNIST.Set) []TrainingData {
 			}
 		}
 		t := TrainingData{
-			TrainingInput: vectorizedImage,
+			TrainingInput:  vectorizedImage,
 			DesiredOutputs: m.vectorizeOutput(uint8(label)),
 		}
 		result = append(result, t)

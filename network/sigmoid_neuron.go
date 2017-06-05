@@ -5,10 +5,10 @@ import (
 )
 
 type SigmoidNeuron struct {
-	InSynapses []*Synapse
+	InSynapses  []*Synapse
 	OutSynapses []*Synapse
-	Bias float64
-	Out float64
+	Bias        float64
+	Out         float64
 }
 
 func (n *SigmoidNeuron) CreateSynapseTo(nTo *SigmoidNeuron, weight float64) {

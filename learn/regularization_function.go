@@ -8,7 +8,7 @@ type RegularizationFunction interface {
 
 var NoRegularization RegularizationFunction = newNoRegularization()
 
-type noRegularization struct {}
+type noRegularization struct{}
 
 func newNoRegularization() RegularizationFunction {
 	r := noRegularization{}
@@ -23,7 +23,7 @@ func (r *noRegularization) CalculateNewWeight(eta, lambda, weight, weightNabla, 
 
 var L1Regularization RegularizationFunction = newL1Regularization()
 
-type l1Regularization struct {}
+type l1Regularization struct{}
 
 func newL1Regularization() RegularizationFunction {
 	r := l1Regularization{}
@@ -35,14 +35,14 @@ func (r *l1Regularization) CalculateNewWeight(eta, lambda, weight, weightNabla, 
 	if weight < 0 {
 		sign = -1
 	}
-	return weight - sign * eta * (lambda / trainingDataLength) - ((eta / miniBatchLength) * weightNabla)
+	return weight - sign*eta*(lambda/trainingDataLength) - ((eta / miniBatchLength) * weightNabla)
 }
 
 // -------
 
 var L2Regularization RegularizationFunction = newL2Regularization()
 
-type l2Regularization struct {}
+type l2Regularization struct{}
 
 func newL2Regularization() RegularizationFunction {
 	r := l2Regularization{}
@@ -50,5 +50,5 @@ func newL2Regularization() RegularizationFunction {
 }
 
 func (r *l2Regularization) CalculateNewWeight(eta, lambda, weight, weightNabla, miniBatchLength, trainingDataLength float64) float64 {
-	return (1 - eta * (lambda / trainingDataLength)) * weight - ((eta / miniBatchLength) * weightNabla)
+	return (1-eta*(lambda/trainingDataLength))*weight - ((eta / miniBatchLength) * weightNabla)
 }

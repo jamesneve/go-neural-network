@@ -10,7 +10,7 @@ type CostFunction interface {
 
 var QuadraticCost CostFunction = newQuadraticCost()
 
-type quadraticCost struct {}
+type quadraticCost struct{}
 
 func newQuadraticCost() CostFunction {
 	q := quadraticCost{}
@@ -29,7 +29,7 @@ func (q *quadraticCost) CalculateDelta(layer *network.Layer, actualOutputs, idea
 
 var CrossEntropy CostFunction = newCrossEntropy()
 
-type crossEntropy struct {}
+type crossEntropy struct{}
 
 func newCrossEntropy() CostFunction {
 	c := crossEntropy{}

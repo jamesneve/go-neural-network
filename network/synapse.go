@@ -2,8 +2,8 @@ package network
 
 type Synapse struct {
 	Weight float64
-	In float64
-	Out float64
+	In     float64
+	Out    float64
 }
 
 func NewSynapse(weight float64) *Synapse {

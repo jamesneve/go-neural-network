@@ -6,7 +6,7 @@ import (
 )
 
 type TrainingData struct {
-	TrainingInput []float64
+	TrainingInput  []float64
 	DesiredOutputs []float64
 }
 

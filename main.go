@@ -1,14 +1,14 @@
 package main
 
 import (
+	"errors"
+	"flag"
 	"fmt"
+	"github.com/jamesneve/go-neural-network/learn"
 	"github.com/jamesneve/go-neural-network/network"
 	"github.com/jamesneve/go-neural-network/trainingdata"
-	"github.com/jamesneve/go-neural-network/learn"
-	"flag"
-	"strings"
 	"strconv"
-	"errors"
+	"strings"
 )
 
 func main() {
@@ -58,7 +58,7 @@ func parseLayers(l string) (*[]int, error) {
 		intLayers = append(intLayers, int(i))
 	}
 
-	if intLayers[len(intLayers) - 1] != 10 {
+	if intLayers[len(intLayers)-1] != 10 {
 		return nil, errors.New("For training MNIST, the final (output) layer must be 10")
 	}
 
@@ -67,8 +67,10 @@ func parseLayers(l string) (*[]int, error) {
 
 func parseCostFunction(e string) learn.CostFunction {
 	switch e {
-	case "cross-entropy": return learn.CrossEntropy
-	case "quadratic": return learn.QuadraticCost
+	case "cross-entropy":
+		return learn.CrossEntropy
+	case "quadratic":
+		return learn.QuadraticCost
 	}
 
 	return learn.CrossEntropy
@@ -76,9 +78,12 @@ func parseCostFunction(e string) learn.CostFunction {
 
 func parseRegularization(e string) learn.RegularizationFunction {
 	switch e {
-	case "none": return learn.NoRegularization
-	case "l1": return learn.L1Regularization
-	case "l2": return learn.L2Regularization
+	case "none":
+		return learn.NoRegularization
+	case "l1":
+		return learn.L1Regularization
+	case "l2":
+		return learn.L2Regularization
 	}
 
 	return learn.L2Regularization

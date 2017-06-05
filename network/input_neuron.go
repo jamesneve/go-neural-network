@@ -2,7 +2,7 @@ package network
 
 type InputNeuron struct {
 	OutSynapses []*Synapse
-	Input float64
+	Input       float64
 }
 
 func NewInputNeuron() *InputNeuron {

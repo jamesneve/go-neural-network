@@ -1,29 +1,29 @@
 package learn
 
 import (
+	"fmt"
 	"github.com/jamesneve/go-neural-network/network"
 	"github.com/jamesneve/go-neural-network/trainingdata"
-	"fmt"
 )
 
 type NetworkTrainer struct {
-	net *network.Network
-	costFunction CostFunction
+	net                    *network.Network
+	costFunction           CostFunction
 	regularizationFunction RegularizationFunction
-	eta float64
-	lambda float64
-	trainingData []trainingdata.TrainingData
-	reportResults bool
+	eta                    float64
+	lambda                 float64
+	trainingData           []trainingdata.TrainingData
+	reportResults          bool
 }
 
 func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, regularizationFunction RegularizationFunction, eta, lambda float64, reportResults bool) NetworkTrainer {
 	return NetworkTrainer{
-		net: nw,
-		costFunction: costFunction,
+		net:                    nw,
+		costFunction:           costFunction,
 		regularizationFunction: regularizationFunction,
-		eta: eta,
-		lambda: lambda,
-		trainingData: trainingData,
+		eta:           eta,
+		lambda:        lambda,
+		trainingData:  trainingData,
 		reportResults: reportResults,
 	}
 }
@@ -33,13 +33,13 @@ func (t *NetworkTrainer) TrainByGradientDescent(epochs, miniBatchSize int, testD
 		currentTrainingData := trainingdata.ShuffleTrainingData(t.trainingData)
 		batchCount := len(t.trainingData) / miniBatchSize
 		for j := 0; j < batchCount; j++ {
-			batch := currentTrainingData[j * miniBatchSize : (j + 1) * miniBatchSize]
+			batch := currentTrainingData[j*miniBatchSize : (j+1)*miniBatchSize]
 			t.UpdateMiniBatch(batch)
 		}
 
 		if t.reportResults {
 			correct := t.Evaluate(testData)
-			fmt.Println("Epoch", i + 1, ":", correct, "/", len(testData))
+			fmt.Println("Epoch", i+1, ":", correct, "/", len(testData))
 		}
 	}
 }
@@ -100,7 +100,7 @@ func (t *NetworkTrainer) Backpropagation(in, ideal []float64) ([][]float64, [][]
 	nablaB[last] = delta
 	for i, n2 := range l.Neurons {
 		for j := range n2.InSynapses {
-			nablaW[last][i][j] = delta[i] * t.net.Layers[last - 1].Neurons[j].CalculateOutput()
+			nablaW[last][i][j] = delta[i] * t.net.Layers[last-1].Neurons[j].CalculateOutput()
 		}
 	}
 
@@ -114,7 +114,7 @@ func (t *NetworkTrainer) Backpropagation(in, ideal []float64) ([][]float64, [][]
 		for j, n2 := range l.Neurons {
 			for k := range n2.InSynapses {
 				if i != 0 {
-					nablaW[i][j][k] = delta[j] * t.net.Layers[i - 1].Neurons[k].CalculateOutput()
+					nablaW[i][j][k] = delta[j] * t.net.Layers[i-1].Neurons[k].CalculateOutput()
 				} else {
 					nablaW[i][j][k] = delta[j] * t.net.InputNeurons[k].Input
 				}

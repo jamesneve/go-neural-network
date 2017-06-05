@@ -1,9 +1,9 @@
 package network
 
 import (
+	"math"
 	"math/rand"
 	"time"
-	"math"
 )
 
 type Network struct {
@@ -15,7 +15,7 @@ type Network struct {
 func NewNetwork(in int, layers []int) *Network {
 	n := &Network{
 		InputNeurons: make([]*InputNeuron, 0, in),
-		Layers: make([]*Layer, 0, len(layers)),
+		Layers:       make([]*Layer, 0, len(layers)),
 	}
 	n.init(in, layers)
 	return n
@@ -45,7 +45,7 @@ func (n *Network) initInputNeurons(in int) {
 
 func (n *Network) ConnectLayers() {
 	for i := len(n.Layers) - 1; i > 0; i-- {
-		n.Layers[i - 1].ConnectTo(n.Layers[i])
+		n.Layers[i-1].ConnectTo(n.Layers[i])
 	}
 }
 
@@ -79,7 +79,7 @@ func (n *Network) calculateLayers() {
 }
 
 func (n *Network) generateOut() []float64 {
-	outL := n.Layers[len(n.Layers) - 1]
+	outL := n.Layers[len(n.Layers)-1]
 	n.Out = make([]float64, len(outL.Neurons))
 
 	for i, neuron := range outL.Neurons {
