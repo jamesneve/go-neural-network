@@ -63,8 +63,8 @@ trainingData := mnistData.MakeTrainingData()
 testData := mnistData.MakeTestData()
 
 // Train the network by SGD 
-// With training data, cost function, regularization function, learning rate and lambda values...
-nt := learn.NewNetworkTrainer(n, trainingData, learn.CrossEntropy, learn.L2Regularization, 0.1, 5.0)
+// With training data, cost function, regularization function, learning rate and lambda values, not printing intermediate results...
+nt := learn.NewNetworkTrainer(n, trainingData, learn.CrossEntropy, learn.L2Regularization, 0.1, 5.0, false)
 
 // ... for 30 epochs, with a mini-batch size of 10, evaluating on the test data
 nt.TrainByGradientDescent(30, 10, testData)
