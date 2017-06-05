@@ -12,7 +12,7 @@ to wait for more hidden neurons.
 You can test it out by calling it from the command line. Command line calls can only be used to train the network with
 the provided MNIST dataset. For now, there's no way to provide your own dataset from the command line.
 
-```bash
+```
 ~> go-neural-network --help
 Usage of go-neural-network:
  -cost-function string
@@ -35,12 +35,16 @@ Usage of go-neural-network:
 
 For example:
 
-```bash
-~> go-neural-network -epochs=2
+```
+~> go-neural-network -epochs=30
 Training MNIST dataset
 Epoch 1 : 9216 / 10000
 Epoch 2 : 9317 / 10000
-Final accuracy : 9317 / 10000
+...
+Epoch 28 : 9702 / 10000
+Epoch 29 : 9667 / 10000
+Epoch 30 : 9683 / 10000
+Final accuracy : 9683 / 10000
 ```
 
 ## Code

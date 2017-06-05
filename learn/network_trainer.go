@@ -116,7 +116,7 @@ func (t *NetworkTrainer) Backpropagation(in, ideal []float64) ([][]float64, [][]
 				if i != 0 {
 					nablaW[i][j][k] = delta[j] * t.net.Layers[i - 1].Neurons[k].CalculateOutput()
 				} else {
-					nablaW[i][j][k] = delta[j] * t.net.Entries[k].Input
+					nablaW[i][j][k] = delta[j] * t.net.InputNeurons[k].Input
 				}
 			}
 		}

@@ -7,14 +7,14 @@ import (
 )
 
 type Network struct {
-	Entries []*InputNeuron
-	Layers []*Layer
-	Out []float64
+	InputNeurons []*InputNeuron
+	Layers       []*Layer
+	Out          []float64
 }
 
 func NewNetwork(in int, layers []int) *Network {
 	n := &Network{
-		Entries: make([]*InputNeuron, 0, in),
+		InputNeurons: make([]*InputNeuron, 0, in),
 		Layers: make([]*Layer, 0, len(layers)),
 	}
 	n.init(in, layers)
@@ -39,7 +39,7 @@ func (n *Network) initLayers(layers []int) {
 func (n *Network) initInputNeurons(in int) {
 	for ; in > 0; in-- {
 		e := NewInputNeuron()
-		n.Entries = append(n.Entries, e)
+		n.InputNeurons = append(n.InputNeurons, e)
 	}
 }
 
@@ -50,24 +50,24 @@ func (n *Network) ConnectLayers() {
 }
 
 func (n *Network) ConnectInputNeurons() {
-	for _, e := range n.Entries {
+	for _, e := range n.InputNeurons {
 		e.ConnectTo(*n.Layers[0])
 	}
 }
 
 func (n *Network) setInputNeurons(v *[]float64) {
 	values := *v
-	if len(values) != len(n.Entries) {
+	if len(values) != len(n.InputNeurons) {
 		panic("Values and inputs don't match")
 	}
 
-	for i, e := range n.Entries {
+	for i, e := range n.InputNeurons {
 		e.Input = values[i]
 	}
 }
 
 func (n *Network) triggerInputNeurons() {
-	for _, e := range n.Entries {
+	for _, e := range n.InputNeurons {
 		e.Trigger()
 	}
 }
