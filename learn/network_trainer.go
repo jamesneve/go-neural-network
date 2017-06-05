@@ -13,9 +13,10 @@ type NetworkTrainer struct {
 	eta float64
 	lambda float64
 	trainingData []trainingdata.TrainingData
+	reportResults bool
 }
 
-func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, regularizationFunction RegularizationFunction, eta, lambda float64) NetworkTrainer {
+func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.TrainingData, costFunction CostFunction, regularizationFunction RegularizationFunction, eta, lambda float64, reportResults bool) NetworkTrainer {
 	return NetworkTrainer{
 		net: nw,
 		costFunction: costFunction,
@@ -23,6 +24,7 @@ func NewNetworkTrainer(nw *network.Network, trainingData []trainingdata.Training
 		eta: eta,
 		lambda: lambda,
 		trainingData: trainingData,
+		reportResults: reportResults,
 	}
 }
 
@@ -35,8 +37,10 @@ func (t *NetworkTrainer) TrainByGradientDescent(epochs, miniBatchSize int, testD
 			t.UpdateMiniBatch(batch)
 		}
 
-		correct := t.Evaluate(testData)
-		fmt.Println("Epoch", i + 1, ":", correct, "/", len(testData))
+		if t.reportResults {
+			correct := t.Evaluate(testData)
+			fmt.Println("Epoch", i + 1, ":", correct, "/", len(testData))
+		}
 	}
 }
 
